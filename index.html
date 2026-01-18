@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Better Late
+</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            playfair: ['Playfair Display', 'serif'],
+            spectral: ['Spectral', 'serif'],
+            cormorant: ['Cormorant Garamond', 'serif'],
+            manrope: ['Manrope', 'sans-serif'],
+            cinzel: ['Cinzel', 'serif'],
+            greatvibes: ['Great Vibes', 'cursive'],
+          },
+          animation: {
+            'toast-in': 'toastIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards',
+            'toast-out': 'toastOut 0.4s ease forwards 2.2s',
+          },
+          keyframes: {
+            toastIn: {
+              '0%': { opacity: '0', transform: 'translateY(20px) scale(0.95)' },
+              '100%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+            },
+            toastOut: {
+              '0%': { opacity: '1', transform: 'translateY(0) scale(1)' },
+              '100%': { opacity: '0', transform: 'translateY(-20px) scale(0.95)' },
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Spectral:wght@400;500;600&family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@300;400;500;600&family=Cinzel:wght@400;500;700&family=Great+Vibes&display=swap" rel="stylesheet">
+
+  <style>
+    .letter {
+      display: inline-block;
+      opacity: 0;
+      position: relative;
+      transition: all 0.65s cubic-bezier(0.215, 0.61, 0.355, 1);
+    }
+
+    .style-1 .letter { transform: translateY(40px); }
+    .style-2 .letter { transform: translateX(18px); }
+    .style-3 .letter { transform: translateY(-60px) scale(0.8); }
+    .style-4 .letter { transform: rotate(var(--rot)) scale(0.6); }
+    .style-5 .letter { filter: blur(8px); transform: scale(1.4); }
+    .style-6 .letter {
+      opacity: 0;
+      transform: translate(calc(var(--dx) * 120px), calc(var(--dy) * 120px)) rotate(calc(var(--rot) * 180deg)) scale(0.3);
+    }
+    /* NEW Birthday Style */
+    .style-7 .letter { transform: perspective(500px) rotateX(-90deg) translateY(20px); transform-origin: bottom; }
+
+    .letter.visible {
+      opacity: 1;
+      transform: translate(0,0) rotate(0) scale(1);
+      filter: blur(0);
+    }
+
+    .delay-1  { transition-delay: 0.02s; }
+    .delay-2  { transition-delay: 0.04s; }
+    .delay-3  { transition-delay: 0.07s; }
+    .delay-4  { transition-delay: 0.11s; }
+    .delay-5  { transition-delay: 0.16s; }
+
+    .audio-player, .toast {
+      transition: all 0.6s ease;
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    .audio-player.visible, .toast.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  </style>
+</head>
+<body class="bg-gray-50 overflow-x-hidden relative">
+
+<div class="fixed bottom-6 right-6 z-50 audio-player" id="audioPlayer">
+  <div class="bg-white/90 backdrop-blur-md rounded-2xl shadow-2xl p-4 flex items-center gap-4 border border-white/40">
+    <button id="playPauseBtn" class="w-12 h-12 flex items-center justify-center rounded-full bg-gray-800 text-white hover:bg-gray-700 transition-colors">
+      ▶
+    </button>
+    <audio id="backgroundAudio" loop></audio>
+    <span class="text-sm font-manrope text-gray-700" id="nowPlaying">Background Music</span>
+  </div>
+</div>
+
+<div id="toast" class="fixed top-8 left-1/2 -translate-x-1/2 z-50 hidden px-6 py-4 bg-gray-900/90 text-white rounded-xl shadow-2xl backdrop-blur-md border border-white/20 font-manrope text-lg font-medium toast">
+  <span id="toastMessage"></span>
+</div>
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 style-7" style="background-color: #FFAAB8;">
+  <div class="max-w-4xl text-center">
+    <h2 class="text-4xl md:text-9xl  text-white mb-10 drop-shadow-md">Happy Birthday, Shoshi!</h2>
+    <p class="text-2xl md:text-4xl font-cormorant italic text-white/95 leading-relaxed max-w-3xl mx-auto">
+      May your year be as radiant as your spirit and as kind as your heart. Today, the world celebrates the incredible person you are becoming.
+    </p>
+  </div>
+</section>
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 style-1" style="background-color: #FD7979;">
+  <div class="max-w-4xl">
+    <h2 class="text-4xl md:text-7xl font-playfair font-bold text-white leading-tight mb-10">A New Beginning</h2>
+    <p class="text-xl md:text-2xl font-manrope text-white/95 leading-relaxed max-w-3xl">
+      Every sunrise carries a promise. The promise that today can be different. That you can choose again. That no matter how many times you fell yesterday, the morning still offers you a clean page to write a better story.
+    </p>
+  </div>
+</section>
+
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 style-2" style="background-color: #957C62;">
+  <div class="max-w-4xl">
+    <h2 class="text-5xl md:text-7xl font-cormorant font-medium text-white tracking-wide mb-10">The Quiet Moments</h2>
+    <p class="text-2xl md:text-3xl font-cinzel text-white/95 leading-relaxed max-w-3xl">
+      Transformation hides in ordinary days. The extra patience when you're tired. The small kindness when no one sees. These invisible stitches are what eventually create a completely different life.
+    </p>
+  </div>
+</section>
+
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 style-3" style="background-color: #E2B59A;">
+  <div class="max-w-4xl">
+    <h2 class="text-5xl md:text-7xl font-spectral font-medium italic text-gray-900 mb-10">Beauty in Imperfection</h2>
+    <p class="text-xl md:text-2xl font-playfair text-gray-900/95 leading-relaxed max-w-3xl">
+      The most beautiful things are rarely flawless. Worn books feel warmer. Hands with scars usually carry the gentlest touch. Real beauty lives in everything that dared to be imperfect and kept going anyway.
+    </p>
+  </div>
+</section>
+
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 style-4" style="background-color: #B77466;">
+  <div class="max-w-4xl">
+    <h2 class="text-5xl md:text-7xl font-cinzel font-bold text-white mb-10">Time to Bloom</h2>
+    <p class="text-2xl md:text-3xl font-manrope text-white/95 leading-relaxed max-w-3xl">
+      Growth is rarely loud. Most flowers open in silence. Most mountains are climbed step by quiet step. Your becoming doesn't need an audience. It only needs your persistence.
+    </p>
+  </div>
+</section>
+
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 style-5" style="background-color: #97A87A;">
+  <div class="max-w-4xl">
+    <h2 class="text-5xl md:text-7xl font-spectral font-medium text-white mb-10">Keep Going</h2>
+    <p class="text-xl md:text-2xl font-cormorant text-white/95 leading-relaxed max-w-3xl">
+      Some days the only victory is continuing. When everything inside screams to stop, when the path disappears into fog — choosing to take one more step becomes the most powerful act of courage.
+    </p>
+  </div>
+</section>
+
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 style-6" style="background-color: #FFEAD3;">
+  <div class="max-w-4xl text-center">
+    <h2 class="text-5xl md:text-7xl font-greatvibes text-gray-900 mb-12">You Are Already Enough</h2>
+    <p class="text-2xl md:text-3xl font-manrope text-gray-900/90 leading-relaxed max-w-3xl mx-auto">
+      Stop waiting for the perfect moment. Stop waiting to feel ready. The world has been waiting for your version of messy, real, beautiful, brave — exactly as you are today.
+    </p>
+  </div>
+</section>
+
+
+
+<section class="min-h-screen flex items-center justify-center px-6 md:px-12 py-20 bg-gradient-to-b from-amber-50 to-rose-50" id="musicSection">
+  <div class="max-w-5xl w-full">
+    <h2 class="text-4xl md:text-7xl  text-center text-gray-800 mb-16">Choose & Click one of this Card</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+      <button class="music-card group bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-white/40"
+              data-src="audio/audio4.m4a" data-title="Sought">
+        <div class="text-center">
+          <div class="text-6xl mb-6 opacity-80"></div>
+          <h3 class="text-2xl font-cinzel font-bold text-gray-800 mb-3">Sought</h3>
+          <p class="text-gray-600 font-manrope">The one you asked for.</p>
+        </div>
+      </button>
+
+      <button class="music-card group bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-white/40"
+              data-src="audio/audio2.m4a" data-title="Fave">
+        <div class="text-center">
+          <div class="text-6xl mb-6 opacity-80"></div>
+          <h3 class="text-2xl font-cinzel font-bold text-gray-800 mb-3">Fave</h3>
+          <p class="text-gray-600 font-manrope">Just because I love it.</p>
+        </div>
+      </button>
+
+      <button class="music-card group bg-white/70 backdrop-blur-md rounded-2xl p-8 shadow-xl hover:shadow-2xl transition-all duration-500 border border-white/40"
+              data-src="audio/audio3.m4a" data-title="Just a trifle">
+        <div class="text-center">
+          <div class="text-6xl mb-6 opacity-80"></div>
+          <h3 class="text-2xl font-cinzel font-bold text-gray-800 mb-3">Just a trifle</h3>
+          <p class="text-gray-600 font-manrope">Don't read too much into it—it's just a trifle I had lying around.</p>
+        </div>
+      </button>
+    </div>
+  </div>
+</section>
+
+<script>
+// Unified text animation function (headings + paragraphs)
+function animateText(element, styleClass) {
+  if (element.dataset.animated) return;
+  element.dataset.animated = 'true';
+
+  const text = element.textContent.trim();
+  element.innerHTML = '';
+
+  text.split('').forEach((char, index) => {
+    const span = document.createElement('span');
+    span.className = 'letter';
+    span.classList.add(`delay-${(index % 5) + 1}`);
+
+    if (styleClass === 'style-4') {
+      const rot = (Math.random() - 0.5) * 60;
+      span.style.setProperty('--rot', `${rot}deg`);
+    }
+    if (styleClass === 'style-6') {
+      const dx = (Math.random() - 0.5) * 2;
+      const dy = (Math.random() - 0.5) * 2;
+      const rot = (Math.random() - 0.5) * 2;
+      span.style.setProperty('--dx', dx);
+      span.style.setProperty('--dy', dy);
+      span.style.setProperty('--rot', rot);
+    }
+
+    span.textContent = char === ' ' ? '\u00A0' : char;
+    element.appendChild(span);
+  });
+
+  setTimeout(() => {
+    const letters = element.querySelectorAll('.letter');
+    const baseDelay = (styleClass === 'style-6' || styleClass === 'style-7') ? 50 : 70;
+    letters.forEach((letter, i) => {
+      setTimeout(() => letter.classList.add('visible'), i * baseDelay + 150);
+    });
+  }, 100);
+}
+
+// Observer for letter animations
+document.addEventListener('DOMContentLoaded', () => {
+  const sections = document.querySelectorAll('section');
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        const styleClass = Array.from(entry.target.classList).find(c => c.startsWith('style-')) || 'style-1';
+
+        const heading = entry.target.querySelector('h2');
+        if (heading) animateText(heading, styleClass);
+
+        const paragraph = entry.target.querySelector('p');
+        if (paragraph) animateText(paragraph, styleClass);
+      }
+    });
+  }, { threshold: 0.3, rootMargin: "0px 0px -15% 0px" });
+
+  sections.forEach(section => observer.observe(section));
+
+  // === Audio & Music Selection Logic ===
+  const audio = document.getElementById('backgroundAudio');
+  const playPauseBtn = document.getElementById('playPauseBtn');
+  const nowPlaying = document.getElementById('nowPlaying');
+  const player = document.getElementById('audioPlayer');
+  const toast = document.getElementById('toast');
+  const toastMessage = document.getElementById('toastMessage');
+
+  audio.volume = 0.45;
+
+  // Show main player after delay
+  setTimeout(() => player.classList.add('visible'), 1200);
+
+  // Default audio
+  let currentAudioSrc = 'audio/audio1.m4a';
+  audio.src = currentAudioSrc;
+  audio.load();
+
+  // Try autoplay
+  audio.play().catch(() => console.log("Autoplay blocked"));
+
+  // Play/Pause main button
+  playPauseBtn.addEventListener('click', () => {
+    if (audio.paused) {
+      audio.play();
+      playPauseBtn.textContent = '❚❚';
+    } else {
+      audio.pause();
+      playPauseBtn.textContent = '▶';
+    }
+  });
+
+  // Music cards
+  document.querySelectorAll('.music-card').forEach(card => {
+    card.addEventListener('click', () => {
+      const src = card.dataset.src;
+      const title = card.dataset.title;
+
+      if (src === currentAudioSrc && !audio.paused) {
+        audio.pause();
+        playPauseBtn.textContent = '▶';
+        return;
+      }
+
+      // Switch audio
+      currentAudioSrc = src;
+      audio.src = src;
+      audio.load();
+      audio.play().then(() => {
+        playPauseBtn.textContent = '❚❚';
+        nowPlaying.textContent = title;
+
+        // Show toast
+        toastMessage.textContent = `Now playing: ${title}`;
+        toast.classList.remove('hidden');
+        toast.classList.add('visible');
+
+        // Auto hide after ~3s
+        setTimeout(() => {
+          toast.classList.remove('visible');
+          setTimeout(() => toast.classList.add('hidden'), 500);
+        }, 2800);
+      }).catch(e => console.log("Playback failed:", e));
+    });
+  });
+});
+</script>
+
+</body>
+</html>
